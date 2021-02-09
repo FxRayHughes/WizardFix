@@ -20,10 +20,4 @@ class Listener : Listener {
         WizardFix.data.saveToFile()
     }
 
-    @EventHandler
-    fun onPlayerLogin(event:PlayerLoginEvent){
-        WizardFix.data.set(event.player.name, event.player.uniqueId.toString())
-        WizardFix.data.saveToFile()
-    }
-
 }
