@@ -2,6 +2,7 @@ package ray.mintcat.wizardfix
 
 import io.izzel.taboolib.TabooLibAPI
 import io.izzel.taboolib.module.command.base.*
+import io.izzel.taboolib.module.db.local.LocalPlayer
 import io.izzel.taboolib.util.Features
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -24,6 +25,25 @@ class Command : BaseMainCommand(), Helper {
                 return
             }
             sender.info("玩家 &f${args[0]} &7的 &f${args[1]} &7变量为 &f${Data(player).get(args[1], "不存在")}")
+        }
+
+    }
+
+    @SubCommand(description = "查看玩家所有变量", permission = "*")
+    var lookAll = object : BaseSubCommand() {
+        override fun getArguments(): Array<Argument> {
+            return arrayOf(Argument("目标") { WizardFix.getPlayerList() })
+        }
+
+        override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
+            val player = WizardFix.getOfflinePlayer(args[0])
+            if (player == null) {
+                sender.error("玩家 &f${args[0]} &7不存在!")
+                return
+            }
+            Data(player).getKeyList()?.forEach { key ->
+                sender.info("玩家 &f${args[0]} &7的 &f$key &7变量为 &f${Data(player).get(key, "不存在")}")
+            }
         }
 
     }
@@ -139,9 +159,9 @@ class Command : BaseMainCommand(), Helper {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
             }
-            val message = TabooLibAPI.getPluginBridge().setPlaceholders(player.player,args[2]).replace("__","")
+            val message = TabooLibAPI.getPluginBridge().setPlaceholders(player.player, args[2]).replace("__", "")
             val value = (Features.compileScript(message)?.eval() ?: "0.0").toString()
-            Data(player).set(args[1],value)
+            Data(player).set(args[1], value)
 
             Bukkit.getScheduler().runTask(WizardFix.plugin, Runnable {
                 if (sender.isOp && sender is Player) {

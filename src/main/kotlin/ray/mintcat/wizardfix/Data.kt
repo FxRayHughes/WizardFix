@@ -3,15 +3,20 @@ package ray.mintcat.wizardfix
 import io.izzel.taboolib.module.db.local.LocalPlayer
 import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.file.FileConfiguration
+import org.jetbrains.annotations.NotNull
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 class Data(val player: OfflinePlayer) {
 
-    private val localPlayer: FileConfiguration = LocalPlayer.get(player)
+    private val localPlayer = LocalPlayer.get(player)
 
     fun get(key: String, def: Any): String {
         return localPlayer.getString("Wizard.list.$key", def.toString()) ?: def.toString()
+    }
+
+    fun getKeyList(): MutableSet<String>? {
+        return localPlayer.getConfigurationSection("Wizard.list")?.getKeys(false)
     }
 
     fun set(key: String, value: String) {
@@ -20,7 +25,7 @@ class Data(val player: OfflinePlayer) {
     }
 
     fun edit(key: String, symbol: String, value: String) {
-        val info = get(key,"0.0").toDouble()
+        val info = get(key, "0.0").toDouble()
         val double = value.toDouble()
         val run = when (symbol) {
             "+" -> info + double
@@ -30,7 +35,7 @@ class Data(val player: OfflinePlayer) {
             "=" -> double
             else -> info + 0.0
         }
-        set(key,run.formats())
+        set(key, run.formats())
     }
 
     fun Double.formats(): String {

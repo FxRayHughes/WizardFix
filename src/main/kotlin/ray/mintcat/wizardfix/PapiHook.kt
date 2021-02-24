@@ -17,10 +17,10 @@ class PapiHook : PlaceholderHook.Expansion {
     }
 
     override fun onPlaceholderRequest(player: Player, params: String): String {
-        val param = params.split("_".toRegex())
+        val param = params.split("_")
         return when (param[0]) {
             "who" -> {
-                val players = WizardFix.getOfflinePlayer(param[1])
+                val players = WizardFix.getOfflinePlayer(param[1].replace("=","_"))
                 if (players == null){
                     param[3]
                 }else{
