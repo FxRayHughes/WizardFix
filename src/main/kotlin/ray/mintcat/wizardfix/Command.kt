@@ -15,11 +15,11 @@ class Command : BaseMainCommand(), Helper {
     @SubCommand(description = "查看变量", permission = "*")
     var look = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("目标") { WizardFix.getPlayerList() }, Argument("变量名"))
+            return arrayOf(Argument("目标") { PlayerUtil.getPlayerList() }, Argument("变量名"))
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
@@ -32,17 +32,18 @@ class Command : BaseMainCommand(), Helper {
     @SubCommand(description = "查看玩家所有变量", permission = "*")
     var lookAll = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("目标") { WizardFix.getPlayerList() })
+            return arrayOf(Argument("目标") { PlayerUtil.getPlayerList() })
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
             }
+            sender.info("玩家 &f${args[0]} &7拥有的变量:")
             Data(player).getKeyList()?.forEach { key ->
-                sender.info("玩家 &f${args[0]} &7的 &f$key &7变量为 &f${Data(player).get(key, "不存在")}")
+                sender.info("- &f$key &7=> &f${Data(player).get(key, "不存在")}")
             }
         }
 
@@ -51,17 +52,17 @@ class Command : BaseMainCommand(), Helper {
     @SubCommand(description = "设置变量", permission = "*")
     var set = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("目标") { WizardFix.getPlayerList() }, Argument("变量名"), Argument("参数"))
+            return arrayOf(Argument("目标") { PlayerUtil.getPlayerList() }, Argument("变量名"), Argument("参数"))
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
             }
 
-            Data(player).set(args[1], args[2])
+            Data(player).edit(args[1], "=", args[2])
 
             Bukkit.getScheduler().runTask(WizardFix.plugin, Runnable {
                 if (sender.isOp && sender is Player) {
@@ -74,11 +75,11 @@ class Command : BaseMainCommand(), Helper {
     @SubCommand(description = "增加变量", permission = "*")
     var add = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("目标") { WizardFix.getPlayerList() }, Argument("变量名"), Argument("参数"))
+            return arrayOf(Argument("目标") { PlayerUtil.getPlayerList() }, Argument("变量名"), Argument("参数"))
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
@@ -97,11 +98,11 @@ class Command : BaseMainCommand(), Helper {
     @SubCommand(description = "增加变量", permission = "*")
     var take = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
-            return arrayOf(Argument("目标") { WizardFix.getPlayerList() }, Argument("变量名"), Argument("参数"))
+            return arrayOf(Argument("目标") { PlayerUtil.getPlayerList() }, Argument("变量名"), Argument("参数"))
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
@@ -121,7 +122,7 @@ class Command : BaseMainCommand(), Helper {
     var edit = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
             return arrayOf(
-                Argument("目标") { WizardFix.getPlayerList() },
+                Argument("目标") { PlayerUtil.getPlayerList() },
                 Argument("变量名"),
                 Argument("动作") { listOf("+", "-", "*", "/", "=") },
                 Argument("参数")
@@ -129,7 +130,7 @@ class Command : BaseMainCommand(), Helper {
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
@@ -147,21 +148,21 @@ class Command : BaseMainCommand(), Helper {
     var js = object : BaseSubCommand() {
         override fun getArguments(): Array<Argument> {
             return arrayOf(
-                Argument("目标") { WizardFix.getPlayerList() },
+                Argument("目标") { PlayerUtil.getPlayerList() },
                 Argument("变量名"),
                 Argument("参数")
             )
         }
 
         override fun onCommand(sender: CommandSender, command: Command, s: String, args: Array<String>) {
-            val player = WizardFix.getOfflinePlayer(args[0])
+            val player = PlayerUtil.getOfflinePlayer(args[0])
             if (player == null) {
                 sender.error("玩家 &f${args[0]} &7不存在!")
                 return
             }
             val message = TabooLibAPI.getPluginBridge().setPlaceholders(player.player, args[2]).replace("__", "")
             val value = (Features.compileScript(message)?.eval() ?: "0.0").toString()
-            Data(player).set(args[1], value)
+            Data(player).edit(args[1], "=", value)
 
             Bukkit.getScheduler().runTask(WizardFix.plugin, Runnable {
                 if (sender.isOp && sender is Player) {

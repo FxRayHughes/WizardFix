@@ -40,14 +40,6 @@ interface Helper {
         }
     }
 
-    fun Block.display() {
-        world.playEffect(location, Effect.STEP_SOUND, type)
-    }
-
-    fun String.unColored(): String {
-        return TLocale.Translate.setUncolored(this)
-    }
-
     object Global {
         @TInject
         val cd = Cooldown("command.sound", 50)

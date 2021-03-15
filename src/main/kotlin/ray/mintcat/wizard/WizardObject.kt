@@ -10,7 +10,7 @@ object WizardObject {
     }
 
     fun setIntegral(player: Player, integral: Any, value: Any) {
-        Data(player).set(integral.toString(),value.toString())
+        Data(player).edit(integral.toString(),"=",value.toString())
     }
 
     fun addIntegral(player: Player, integral: Any, value: Double) {

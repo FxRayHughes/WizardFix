@@ -3,16 +3,12 @@ plugins {
     id 'io.izzel.taboolib' version '1.3'
     id 'org.jetbrains.kotlin.jvm' version '1.4.0'
 }
-
 group = 'ray.mintcat.wizard'
-version = '1.1.0'
-
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+version = '1.2.0'
 
 taboolib {
-    tabooLibVersion = '5.47'
-    loaderVersion = '2.10'
+    tabooLibVersion = '5.58'
+    loaderVersion = '2.8'
     classifier = null
     builtin = true
 }
@@ -22,8 +18,8 @@ repositories {
 }
 
 dependencies {
-    compile 'ink.ptms.core:v11600:11600:all'
-    compile 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'ink.ptms.core:v11600:11600:all'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     compileOnly fileTree(dir: 'libs', includes: ['*.jar'])
 }
 
@@ -37,17 +33,5 @@ processResources {
                 libVersion: taboolib.tabooLibVersion,
                 loaderVersion: taboolib.loaderVersion
         )
-    }
-}
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
