@@ -11,6 +11,8 @@
   参数:
     - look [目标] [变量名]
       查看变量
+    - lookAll [目标] [变量名]
+      查看玩家所有变量
     - set [目标] [变量名] [参数]
       设置变量
     - add [目标] [变量名] [参数]
@@ -23,24 +25,41 @@
       运算修改变量
 ```
 
-## Papi
+## Papi? NewPapi
+旧的变量依然保留了但是不会更新了
 ```
+在变量里用[]可以替换其中的papi变量 [[ 也可以 ]] 也可以hhhh
 获取玩家变量:
 key = 变量名,def = 默认值
-%wizard_info_key_def%
+%wizardfix_info;key;def%
+
 获取其他玩家变量:
 player = 玩家名,可离线
-%wizard_who_player_key_def%
+%wizardfix_who;player;key;def%
+%wizardfix_who;[player_name];key;def%
+
 判断变量:
 !数值变量才可以用!
 如果key满足this就返回yes
 不满足或为空就返回no
-%wizard_has_key_this_yes_no%
+%wizardfix_has;key;this;yes;no%
+
 判断变量:
 !文字变量才可以用!
 如果key满足this就返回yes
 不满足或为空就返回no
-%wizard_is_key_this_yes_no%
+%wizardfix_is;key;this;yes;no%
+
+排行:
+topJust = 正序 topBack = 倒序
+type = player value
+player返回的是玩家名
+value返回的是数值
+number是排行第几
+def是不存在返回什么
+!注意: 排行是从0开始的! 不是1!
+%wizardfix_topJust;type;key;number;def%
+%wizardfix_topJust;player;击杀;0;虚左以待%
 ```
 
 ## Use
@@ -49,7 +68,7 @@ player = 玩家名,可离线
 首先 这个插件是对单个玩家使用的,按照传统角度无法全局变量
 但是我兼容了离线玩家嗯,也就是你创建一个号登陆游戏后再ban掉即可
 然后操作那个账号的变量就是全局变量了...
-%wizard_who_Server_key_def% <-像这种 就可以获取到Server的Key变量
+%wizardfix_who;Server;key;def% <-像这种 就可以获取到Server的Key变量
 
 离线补全:
 嗯 我给离线玩家整了个补全功能,这样就可以获取到离线玩家
@@ -66,6 +85,7 @@ LOCAL-PLAYER-BRIDGE项,自己进行修改
 Data(OfflinePlayer).get(Key, Def)
 //=> 设置玩家数据
 //value = 设置内容 [小数,字符串,整数]
+废弃了! 用edit的 "="
 Data(OfflinePlayer).set(Key, Value)
 //=> 编辑玩家数据
 //symbol = 符号 [ + - * / =]
@@ -79,8 +99,19 @@ WizardObject.setIntegral(player, integral, value)
 WizardObject.addIntegral(player, integral, value)
 WizardObject.takeIntegral(player, integral, value)
 
+更改了此模块
 //获取离线玩家的对象 通过ID
-WizardFix.getOfflinePlayer(name)
+PlayerUtil.getOfflinePlayer(name)
+//获取所有玩家对象 通过ID
+PlayerUtil.getOfflinePlayerList()
 //获取所有玩家的名字,包括离线玩家
-WizardFix.getPlayerList()
+PlayerUtil.getPlayerList()
+
+排行榜API
+//获取玩家的排名
+类型 = JustPlayer/JustValue/BackPlayer/BackValue
+key = 查询的变量
+number = 第几名从0开始
+def = 如果为空返回什么
+WizardTop.getInfo(类型,key,number,def)
 ````
