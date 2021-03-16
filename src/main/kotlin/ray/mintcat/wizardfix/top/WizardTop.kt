@@ -1,15 +1,25 @@
 package ray.mintcat.wizardfix.top
 
+import org.bukkit.Bukkit
 import ray.mintcat.wizardfix.Data
 import ray.mintcat.wizardfix.PlayerUtil
+import ray.mintcat.wizardfix.WizardFix
 
 object WizardTop {
-    val topList = HashMap<String, ArrayList<TopData>>()
+
+    private val topList = HashMap<String, ArrayList<TopData>>()
 
     fun getTopJust(key: String): ArrayList<TopData>? {
         load(key)
         val dates = topList[key] ?: return null
         dates.sortBy { it.value }
+        return dates
+    }
+
+    fun getTopBack(key: String): ArrayList<TopData>? {
+        load(key)
+        val dates = topList[key] ?: return null
+        dates.sortByDescending { it.value }
         return dates
     }
 
@@ -24,7 +34,6 @@ object WizardTop {
 
                 }
             }
-
             "JustValue" -> {
                 try {
                     val name = getTopJust(key)?.get(top)?.value
@@ -34,7 +43,6 @@ object WizardTop {
 
                 }
             }
-
             "BackPlayer" -> {
                 try {
                     val name = getTopBack(key)?.get(top)?.player?.name
@@ -44,7 +52,6 @@ object WizardTop {
 
                 }
             }
-
             "BackValue" -> {
                 try {
                     val name = getTopBack(key)?.get(top)?.value
@@ -58,23 +65,13 @@ object WizardTop {
         return def
     }
 
-    fun getTopBack(key: String): ArrayList<TopData>? {
-        load(key)
-        val dates = topList[key] ?: return null
-        dates.sortByDescending { it.value }
-        return dates
-    }
-
-
-    fun load(key: String) {
-        if (topList[key]?.size ?: 0 < 1) {
-            PlayerUtil.getOfflinePlayerList().forEach {
-                val data = Data(it).get(key, "0.0")
-                if (topList[key]?.size ?: 0 < 1) {
-                    topList[key] = arrayListOf()
-                }
-                topList[key]!!.add(TopData(it, key, data))
-            }
+    private fun load(key: String) {
+        val list = mutableListOf<TopData>()
+        PlayerUtil.getOfflinePlayerList().forEach { player ->
+            val data = Data(player).get(key, "0.0")
+            list.add(TopData(player, key, data))
         }
+        topList[key]?.clear()
+        topList[key] = list as ArrayList<TopData>
     }
 }

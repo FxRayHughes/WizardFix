@@ -24,7 +24,7 @@
     - js [目标] [变量名] [参数]
       运算修改变量
 ```
-
+ 
 ## Papi? NewPapi
 旧的变量依然保留了但是不会更新了
 ```
@@ -51,7 +51,7 @@ player = 玩家名,可离线
 %wizardfix_is;key;this;yes;no%
 
 排行:
-topJust = 正序 topBack = 倒序
+topJust = 从小到大 topBack = 从大到小
 type = player value
 player返回的是玩家名
 value返回的是数值
