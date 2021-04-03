@@ -32,12 +32,12 @@ class Data(private val player: OfflinePlayer) {
     }
 
     fun edit(key: String, symbol: String, value: String) {
-        val info = get(key, "0.0").toDouble()
+        val info = get(key, "0.0")
         val run = when (symbol) {
-            "+" -> info + value.toDouble()
-            "-" -> info - value.toDouble()
-            "*" -> info * value.toDouble()
-            "/" -> info / value.toDouble()
+            "+" -> info.toDouble() + value.toDouble()
+            "-" -> info.toDouble() - value.toDouble()
+            "*" -> info.toDouble() * value.toDouble()
+            "/" -> info.toDouble() / value.toDouble()
             "=" -> value
             else -> value
         }
