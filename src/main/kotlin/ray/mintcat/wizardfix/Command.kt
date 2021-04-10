@@ -124,7 +124,7 @@ class Command : BaseMainCommand(), Helper {
             return arrayOf(
                 Argument("目标") { PlayerUtil.getPlayerList() },
                 Argument("变量名"),
-                Argument("动作") { listOf("+", "-", "*", "/", "=") },
+                Argument("动作") { listOf("+", "-", "*", "/", "=","<-") },
                 Argument("参数")
             )
         }

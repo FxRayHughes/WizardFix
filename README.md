@@ -21,6 +21,7 @@
       增加变量
     - edit [目标] [变量名] [动作] [参数]
       修改变量
+      注: 删除变量为 /wizard edit [xxx] [xxx] <- null
     - js [目标] [变量名] [参数]
       运算修改变量
 ```
@@ -88,7 +89,7 @@ Data(OfflinePlayer).get(Key, Def)
 废弃了! 用edit的 "="
 Data(OfflinePlayer).set(Key, Value)
 //=> 编辑玩家数据
-//symbol = 符号 [ + - * / =]
+//symbol = 符号 [ + - * / = <-]
 // edit写法不支持字符串类型变量
 Data(OfflinePlayer).edit(key, symbol, value)
 

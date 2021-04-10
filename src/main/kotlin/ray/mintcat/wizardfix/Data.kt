@@ -26,22 +26,21 @@ class Data(private val player: OfflinePlayer) {
     }
 
     //使用者请使用edit的 =
-    private fun set(key: String, value: String) {
+    private fun set(key: String, value: String?) {
         localPlayer.set("Wizard.list.$key", value)
         LocalPlayer.save(player)
     }
 
     fun edit(key: String, symbol: String, value: String) {
         val info = get(key, "0.0")
-        val run = when (symbol) {
-            "+" -> info.toDouble() + value.toDouble()
-            "-" -> info.toDouble() - value.toDouble()
-            "*" -> info.toDouble() * value.toDouble()
-            "/" -> info.toDouble() / value.toDouble()
-            "=" -> value
-            else -> value
+        when (symbol) {
+            "+" -> set(key, (info.toDouble() + value.toDouble()).formats())
+            "-" -> set(key, (info.toDouble() - value.toDouble()).formats())
+            "*" -> set(key, (info.toDouble() * value.toDouble()).formats())
+            "/" -> set(key, (info.toDouble() / value.toDouble()).formats())
+            "=" -> set(key, value)
+            "<-" -> set(key, null)
         }
-        set(key, run.formats())
     }
 
     private fun Any.formats(): String {
